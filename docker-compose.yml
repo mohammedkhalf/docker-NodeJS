@@ -1,8 +1,14 @@
 version: "3.4"
 services:
-  node-app:
+  node-app:     #container 1
     container_name: express-node-app
     ports:
       ["4000:4000"]
     env_file:
       - ./.env
+  mongo:        #container 2
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
