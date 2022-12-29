@@ -9,6 +9,10 @@ services:
   mongo:        #container 2
     image: mongo
     restart: always
+    volumes:
+      - mongo-db:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+volumes:             # these volum to store data in hard drive in in /data/db directory inside mongo container
+  mongo-db:
