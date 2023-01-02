@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const redis = require('redis');
+const { Client } = require('pg');
 
 //init app
 const PORT = process.env.PORT || 4000;   // I passed to container which port that app work on it
@@ -17,16 +18,33 @@ redisClient.on('error', (err) => console.log('Redis Client Error', err));
 redisClient.on('connect', (err) => console.log('connected to redis...'));
 redisClient.connect();
 
-//connect db
+
+//postgres connect db
 const DB_USER = 'root';
 const DB_PASSWORD = 'example';
-const DB_PORT = 27017;
-const DB_HOST = 'mongo'   // to connect db inside container use   mongosh -u root -p example
+const DB_PORT = 5432;
+const DB_HOST = 'postgres'   // to connect db inside container
 
-const URI = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}`
-mongoose.connect(URI)
-.then(() => console.log('connected to db....'))
-.catch((err) => console.log('failed to connect to db',err));
+const URI = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}`
+const client = new Client({
+    connectionString: URI,
+  });
+
+client
+    .connect()
+    .then(() => console.log('connected to Postgres db....'))
+    .catch((err) => console.log('failed to connect to  postgres db',err));
+
+// //mongo connect db
+// const DB_USER = 'root';
+// const DB_PASSWORD = 'example';
+// const DB_PORT = 27017;
+// const DB_HOST = 'mongo'   // to connect db inside container use   mongosh -u root -p example
+
+// const URI = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}`
+// mongoose.connect(URI)
+// .then(() => console.log('connected to db....'))
+// .catch((err) => console.log('failed to connect to db',err));
 
 //code
 app.get('/',(req,res)=> { 
